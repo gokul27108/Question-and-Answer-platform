@@ -86,7 +86,7 @@
 
     <!-- Client Application Scripts -->
     <script src="js/api.js"></script>
-    <script>
+    <script type="module">
         const currUser = Api.Auth.getCurrentUser();
         if (currUser && currUser.username) {
             document.getElementById('user-nav-name').innerText = currUser.username;
