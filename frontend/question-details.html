@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question Details — Open Q&A Platform</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <!-- Custom Style -->
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Header Navigation Bar -->
+    <nav class="navbar navbar-expand-lg top-navbar fixed-top py-0">
+        <div class="container-fluid shell-container">
+            <a class="navbar-brand py-2" href="index.html">
+                <i class="fa-solid fa-layer-group"></i> open<strong>qa</strong>
+            </a>
+            
+            <div class="d-flex align-items-center gap-3 ms-auto">
+                <div id="auth-buttons">
+                    <a href="login.html" class="btn btn-so-secondary btn-sm me-2">Log in</a>
+                    <a href="register.html" class="btn btn-so-primary btn-sm">Sign up</a>
+                </div>
+                <div id="user-menu" class="dropdown" style="display:none;">
+                    <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle text-dark" id="userDropdown" data-bs-toggle="dropdown">
+                        <img src="" id="user-nav-avatar" class="rounded-circle me-2" width="30" height="30">
+                        <span id="user-nav-name" class="fw-bold me-1">User</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="#" id="menu-btn-profile">My Profile</a></li>
+                        <li><a class="dropdown-item" href="#" id="menu-btn-logout">Log out</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Shell Container -->
+    <div class="shell-container">
+        
+        <!-- Left Sidebar Navigation -->
+        <aside class="left-sidebar">
+            <ul class="sidebar-nav">
+                <li><a href="index.html"><i class="fa-solid fa-earth-americas me-2"></i> Home</a></li>
+                <li><a href="index.html?sortBy=votes"><i class="fa-solid fa-fire me-2"></i> Hot Topics</a></li>
+                <li><a href="#" id="sidebar-btn-leaderboard"><i class="fa-solid fa-trophy me-2"></i> Leaderboard</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="main-content">
+            <div id="error-message" class="alert alert-danger" style="display:none;"></div>
+
+            <!-- Question container -->
+            <div id="question-details-block" style="display:none;">
+                <div class="border-bottom pb-3 mb-4">
+                    <h1 class="h3 mb-2" id="q-detail-title">Question Title</h1>
+                    <div class="d-flex text-muted small gap-3">
+                        <span>Asked <strong id="q-detail-date">today</strong></span>
+                        <span>Views: <strong id="q-detail-views">0</strong></span>
+                        <span>Category: <strong id="q-detail-category" class="text-primary">None</strong></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- Voting Column -->
+                    <div class="col-auto text-center">
+                        <div class="vote-section">
+                            <i class="fa-solid fa-caret-up vote-arrow" id="q-vote-up"></i>
+                            <span class="vote-score" id="q-score">0</span>
+                            <i class="fa-solid fa-caret-down vote-arrow" id="q-vote-down"></i>
+                        </div>
+                    </div>
+
+                    <!-- Description Column -->
+                    <div class="col">
+                        <div class="post-body markdown-body mb-3" id="q-detail-description">
+                            Question contents
+                        </div>
+                        <div class="mb-3" id="q-detail-tags">
+                            <!-- Tags list -->
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <button class="btn btn-outline-danger btn-sm" id="btn-delete-question" style="display:none;">
+                                <i class="fa-solid fa-trash"></i> Delete Question
+                            </button>
+                            <div class="question-meta ms-auto border rounded p-2 bg-light">
+                                <img src="" id="q-author-avatar" class="rounded-circle me-1" width="32" height="32">
+                                <div>
+                                    <span id="q-author-name" class="fw-bold meta-author cursor-pointer">Author</span>
+                                    <div class="meta-reputation small">Reputation: <span id="q-author-rep">0</span></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Question Comments list -->
+                        <div class="comment-list" id="q-comments-list">
+                            <!-- Comments go here -->
+                        </div>
+                        <button class="add-comment-btn mt-2" id="btn-add-q-comment"><i class="fa-solid fa-plus-circle"></i> Add a comment</button>
+                        <div class="mt-2" id="q-comment-form-wrapper" style="display:none;">
+                            <div class="input-group">
+                                <input type="text" id="q-comment-input" class="form-control form-control-sm" placeholder="Type comment here (min 2 chars)...">
+                                <button class="btn btn-so-primary btn-sm" id="btn-submit-q-comment">Comment</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Answers Header -->
+                <h2 class="h4 border-bottom pb-2 mt-5 mb-4" id="answers-count-title">0 Answers</h2>
+                <div id="answers-container">
+                    <!-- Dynamic answers list -->
+                </div>
+
+                <!-- Post Answer Area -->
+                <div class="card p-4 border shadow-sm mt-5 mb-4">
+                    <h3 class="h5 fw-bold mb-3">Your Answer</h3>
+                    <div id="answer-alert" class="alert alert-danger" style="display:none;"></div>
+                    <form id="post-answer-form">
+                        <div class="mb-3">
+                            <ul class="nav nav-tabs mb-2" id="ans-editor-tabs">
+                                <li class="nav-item">
+                                    <button type="button" class="nav-link active" id="ans-write-tab" data-bs-toggle="tab" data-bs-target="#ans-write-panel">Write</button>
+                                </li>
+                                <li class="nav-item">
+                                    <button type="button" class="nav-link" id="ans-preview-tab" data-bs-toggle="tab" data-bs-target="#ans-preview-panel">Preview</button>
+                                </li>
+                            </ul>
+                            <div class="tab-content border rounded bg-light p-2">
+                                <div class="tab-pane fade show active" id="ans-write-panel">
+                                    <textarea class="form-control border-0 bg-light" id="ans-text" rows="8" placeholder="Support math formulas (e.g. $$I = \\int r dr$$) and markdown..." required style="resize: vertical; font-family: monospace;"></textarea>
+                                </div>
+                                <div class="tab-pane fade p-3 post-body bg-white" id="ans-preview-panel" style="min-height: 196px;">
+                                    <p class="text-muted small">Nothing to preview yet.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3 mt-3">
+                            <label for="ans-image-file" class="form-label fw-bold mb-0">Upload Image (Optional)</label>
+                            <div class="text-muted small mb-2">Choose an image/diagram file to upload with your answer.</div>
+                            <input type="file" class="form-control" id="ans-image-file" accept="image/*">
+                        </div>
+                        <button type="submit" class="btn btn-so-primary py-2 px-4">Post Your Answer</button>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- KaTeX JS Auto-Render -->
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    <!-- Marked Markdown parser -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <!-- Client Application Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const questionId = urlParams.get('id');
+
+        if (!questionId) {
+            window.location.href = 'index.html';
+        }
+
+        const currUser = Api.Auth.getCurrentUser();
+        if (currUser && currUser.username) {
+            document.getElementById('user-nav-name').innerText = currUser.username;
+            document.getElementById('user-nav-avatar').src = `https://api.dicebear.com/7.x/bottts/svg?seed=${currUser.username}`;
+            document.getElementById('user-menu').style.display = 'block';
+            document.getElementById('auth-buttons').style.display = 'none';
+        }
+
+        // Load Question Detail
+        async function loadQuestionDetail() {
+            try {
+                const q = await Api.Questions.getById(questionId);
+                const answers = await Api.Answers.getByQuestion(questionId);
+                const comments = await Api.Comments.getByQuestion(questionId);
+
+                document.getElementById('q-detail-title').innerText = q.title;
+                document.getElementById('q-detail-date').innerText = new Date(q.createdAt).toLocaleDateString();
+                document.getElementById('q-detail-views').innerText = q.views;
+                document.getElementById('q-detail-category').innerText = q.categoryName || 'General';
+                
+                const qBody = document.getElementById('q-detail-description');
+                qBody.innerHTML = marked.parse(q.description);
+                if (q.imageUrl) {
+                    qBody.innerHTML += `<div class="my-3"><img src="${q.imageUrl}" class="img-fluid rounded border" style="max-height: 400px; object-fit: contain;"></div>`;
+                }
+                
+                document.getElementById('q-score').innerText = q.votes;
+                
+                const tagsDiv = document.getElementById('q-detail-tags');
+                tagsDiv.innerHTML = q.tags.map(t => `<a href="index.html?tag=${t}" class="tag-badge">#${t}</a>`).join('');
+                
+                document.getElementById('q-author-avatar').src = q.authorAvatar;
+                document.getElementById('q-author-name').innerText = q.authorUsername;
+                document.getElementById('q-author-rep').innerText = q.authorReputation;
+                document.getElementById('q-author-name').onclick = () => window.location.href = `profile.html?user=${q.authorUsername}`;
+
+                // Admin check
+                if (currUser && (currUser.username === q.authorUsername || currUser.roles.includes('ADMIN'))) {
+                    document.getElementById('btn-delete-question').style.display = 'inline-block';
+                }
+
+                // Upvote/Downvote actions
+                document.getElementById('q-vote-up').onclick = async () => {
+                    await Api.Votes.voteQuestion(q.id, 1);
+                    loadQuestionDetail();
+                };
+                document.getElementById('q-vote-down').onclick = async () => {
+                    await Api.Votes.voteQuestion(q.id, -1);
+                    loadQuestionDetail();
+                };
+
+                // Delete Question
+                document.getElementById('btn-delete-question').onclick = async () => {
+                    if (confirm('Are you sure you want to delete this question?')) {
+                        await Api.Questions.delete(q.id);
+                        window.location.href = 'index.html';
+                    }
+                };
+
+                // Comments
+                renderComments(comments, document.getElementById('q-comments-list'), 'question', q.id);
+
+                // Answers
+                document.getElementById('answers-count-title').innerText = `${answers.length} Answers`;
+                renderAnswers(answers, q);
+
+                document.getElementById('question-details-block').style.display = 'block';
+
+                // Render LaTeX math on the entire page
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false},
+                        {left: '\\(', right: '\\)', display: false},
+                        {left: '\\[', right: '\\]', display: true}
+                    ],
+                    throwOnError: false
+                });
+
+            } catch (err) {
+                document.getElementById('error-message').innerText = err.message || 'Failed to load details.';
+                document.getElementById('error-message').style.display = 'block';
+            }
+        }
+
+        // Render comments
+        function renderComments(comments, container, type, parentPostId) {
+            container.innerHTML = '';
+            comments.forEach(c => {
+                const commentEl = document.createElement('div');
+                commentEl.className = 'comment-item';
+                commentEl.innerHTML = `
+                    <span class="post-body">${marked.parse(c.text)}</span> 
+                    – <strong class="comment-author cursor-pointer" onclick="window.location.href='profile.html?user=${c.authorUsername}'">${c.authorUsername}</strong>
+                    <span class="comment-reputation text-muted">(${c.authorReputation})</span>
+                    <span class="comment-time small text-muted">${new Date(c.createdAt).toLocaleDateString()}</span>
+                    ${currUser && (currUser.username === c.authorUsername || currUser.roles.includes('ADMIN')) 
+                        ? `<i class="fa-solid fa-trash text-danger ms-2 cursor-pointer small btn-del-comment" data-cid="${c.id}"></i>` 
+                        : ''}
+                `;
+                
+                // Bind delete
+                const delBtn = commentEl.querySelector('.btn-del-comment');
+                if (delBtn) {
+                    delBtn.onclick = async () => {
+                        if (confirm('Delete comment?')) {
+                            await Api.Comments.delete(c.id);
+                            loadQuestionDetail();
+                        }
+                    };
+                }
+
+                container.appendChild(commentEl);
+            });
+        }
+
+        // Render Answers
+        function renderAnswers(answers, q) {
+            const container = document.getElementById('answers-container');
+            container.innerHTML = '';
+
+            answers.forEach(a => {
+                const ansDiv = document.createElement('div');
+                ansDiv.className = `row border-bottom py-4 answer-block ${a.accepted ? 'bg-light-subtle' : ''}`;
+                ansDiv.id = `answer-${a.id}`;
+                
+                ansDiv.innerHTML = `
+                    <div class="col-auto text-center">
+                        <div class="vote-section">
+                            <i class="fa-solid fa-caret-up vote-arrow" id="ans-vote-up-${a.id}"></i>
+                            <span class="vote-score">${a.votes}</span>
+                            <i class="fa-solid fa-caret-down vote-arrow" id="ans-vote-down-${a.id}"></i>
+                            
+                            <!-- Accepted Checkmark -->
+                            <i class="fa-solid fa-circle-check accepted-check mt-3 ${a.accepted ? 'active' : ''}" id="ans-accept-${a.id}"></i>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="post-body markdown-body mb-3">${marked.parse(a.text)}</div>
+                        ${a.imageUrl ? `<div class="my-3"><img src="${a.imageUrl}" class="img-fluid rounded border" style="max-height: 350px; object-fit: contain;"></div>` : ''}
+                        
+                        <div class="d-flex justify-content-between align-items-center">
+                            ${currUser && (currUser.username === a.authorUsername || currUser.roles.includes('ADMIN')) 
+                                ? `<button class="btn btn-outline-danger btn-sm btn-del-ans" data-aid="${a.id}"><i class="fa-solid fa-trash"></i> Delete</button>` 
+                                : '<span></span>'}
+                            
+                            <div class="question-meta border rounded p-2 bg-light">
+                                <img src="${a.authorAvatar}" class="rounded-circle me-1" width="32" height="32">
+                                <div>
+                                    <span class="fw-bold meta-author cursor-pointer" onclick="window.location.href='profile.html?user=${a.authorUsername}'">${a.authorUsername}</span>
+                                    <div class="meta-reputation small">Reputation: ${a.authorReputation}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Answer comments -->
+                        <div class="comment-list" id="ans-comments-${a.id}"></div>
+                        <button class="add-comment-btn mt-2 btn-add-ans-comment-toggle" data-aid="${a.id}"><i class="fa-solid fa-plus-circle"></i> Add a comment</button>
+                        <div class="mt-2" id="ans-comment-form-wrapper-${a.id}" style="display:none;">
+                            <div class="input-group">
+                                <input type="text" id="ans-comment-input-${a.id}" class="form-control form-control-sm" placeholder="Type comment here...">
+                                <button class="btn btn-so-primary btn-sm btn-submit-ans-comment" data-aid="${a.id}">Comment</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                // Bind answer upvote/downvote
+                ansDiv.querySelector(`#ans-vote-up-${a.id}`).onclick = async () => {
+                    await Api.Votes.voteAnswer(a.id, 1);
+                    loadQuestionDetail();
+                };
+                ansDiv.querySelector(`#ans-vote-down-${a.id}`).onclick = async () => {
+                    await Api.Votes.voteAnswer(a.id, -1);
+                    loadQuestionDetail();
+                };
+
+                // Bind accept best answer (only question owner can accept)
+                ansDiv.querySelector(`#ans-accept-${a.id}`).onclick = async () => {
+                    try {
+                        await Api.Answers.accept(a.id);
+                        loadQuestionDetail();
+                    } catch (err) {
+                        alert(err.message || 'Failed to accept best answer.');
+                    }
+                };
+
+                // Bind delete answer
+                const delAnsBtn = ansDiv.querySelector('.btn-del-ans');
+                if (delAnsBtn) {
+                    delAnsBtn.onclick = async () => {
+                        if (confirm('Delete answer?')) {
+                            await Api.Answers.delete(a.id);
+                            loadQuestionDetail();
+                        }
+                    };
+                }
+
+                // Render answer comments
+                Api.Comments.getByAnswer(a.id).then(cList => {
+                    renderComments(cList, ansDiv.querySelector(`#ans-comments-${a.id}`), 'answer', a.id);
+                });
+
+                // Answer comments forms toggles
+                const addCommentToggle = ansDiv.querySelector('.btn-add-ans-comment-toggle');
+                const commentWrapper = ansDiv.querySelector(`#ans-comment-form-wrapper-${a.id}`);
+                addCommentToggle.onclick = () => {
+                    commentWrapper.style.display = commentWrapper.style.display === 'none' ? 'block' : 'none';
+                };
+
+                // Submit answer comment
+                ansDiv.querySelector('.btn-submit-ans-comment').onclick = async () => {
+                    const text = ansDiv.querySelector(`#ans-comment-input-${a.id}`).value.trim();
+                    if (text.length >= 2) {
+                        await Api.Comments.createAnswerComment(a.id, text);
+                        loadQuestionDetail();
+                    }
+                };
+
+                container.appendChild(ansDiv);
+            });
+        }
+
+        // Submit comment on Question
+        document.getElementById('btn-add-q-comment').onclick = () => {
+            const wrapper = document.getElementById('q-comment-form-wrapper');
+            wrapper.style.display = wrapper.style.display === 'none' ? 'block' : 'none';
+        };
+
+        document.getElementById('btn-submit-q-comment').onclick = async () => {
+            const text = document.getElementById('q-comment-input').value.trim();
+            if (text.length >= 2) {
+                await Api.Comments.createQuestionComment(questionId, text);
+                document.getElementById('q-comment-input').value = '';
+                document.getElementById('q-comment-form-wrapper').style.display = 'none';
+                loadQuestionDetail();
+            }
+        };
+
+        // Tab answer preview
+        document.getElementById('ans-preview-tab').addEventListener('show.bs.tab', () => {
+            const text = document.getElementById('ans-text').value;
+            const preview = document.getElementById('ans-preview-panel');
+            if (text.trim()) {
+                preview.innerHTML = marked.parse(text);
+                renderMathInElement(preview, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false},
+                        {left: '\\(', right: '\\)', display: false},
+                        {left: '\\[', right: '\\]', display: true}
+                    ],
+                    throwOnError: false
+                });
+            } else {
+                preview.innerHTML = '<p class="text-muted small">Nothing to preview yet.</p>';
+            }
+        });
+
+        // Submit Answer Form
+        document.getElementById('post-answer-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const text = document.getElementById('ans-text').value.trim();
+            const alertDiv = document.getElementById('answer-alert');
+
+            // Read answer file input
+            const fileInput = document.getElementById('ans-image-file');
+            let imageUrl = '';
+            if (fileInput.files && fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                imageUrl = await new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => resolve(reader.result);
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            try {
+                alertDiv.style.display = 'none';
+                await Api.Answers.create(questionId, text, imageUrl);
+                document.getElementById('ans-text').value = '';
+                if (fileInput) fileInput.value = ''; // Clear file selection
+                loadQuestionDetail();
+            } catch (err) {
+                alertDiv.innerText = err.message || 'Failed to submit answer.';
+                alertDiv.style.display = 'block';
+            }
+        };
+
+        // Initialize details page
+        loadQuestionDetail();
+    </script>
+</body>
+</html>

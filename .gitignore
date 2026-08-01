@@ -1,0 +1,27 @@
+# Node.js dependencies
+node_modules/
+package-lock.json
+npm-debug.log*
+
+# Java/Maven files
+target/
+*.class
+*.jar
+*.war
+.mvn/
+
+# IDEs & System files
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+Thumbs.db
+
+# Environments & Keys
+.env
+*.pem
+*.key

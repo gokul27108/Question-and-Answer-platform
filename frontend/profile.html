@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile — Open Q&A Platform</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom Style -->
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Header Navigation Bar -->
+    <nav class="navbar navbar-expand-lg top-navbar fixed-top py-0">
+        <div class="container-fluid shell-container">
+            <a class="navbar-brand py-2" href="index.html">
+                <i class="fa-solid fa-layer-group"></i> open<strong>qa</strong>
+            </a>
+            
+            <div class="d-flex align-items-center gap-3 ms-auto">
+                <div id="user-menu" class="dropdown">
+                    <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle text-dark" id="userDropdown" data-bs-toggle="dropdown">
+                        <img src="" id="user-nav-avatar" class="rounded-circle me-2" width="30" height="30">
+                        <span id="user-nav-name" class="fw-bold me-1">User</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="#" id="menu-btn-profile">My Profile</a></li>
+                        <li><a class="dropdown-item" href="#" id="menu-btn-logout">Log out</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Shell Container -->
+    <div class="shell-container">
+        
+        <!-- Left Sidebar Navigation -->
+        <aside class="left-sidebar">
+            <ul class="sidebar-nav">
+                <li><a href="index.html"><i class="fa-solid fa-earth-americas me-2"></i> Home</a></li>
+                <li><a href="index.html?sortBy=votes"><i class="fa-solid fa-fire me-2"></i> Hot Topics</a></li>
+                <li><a href="#" id="sidebar-btn-leaderboard"><i class="fa-solid fa-trophy me-2"></i> Leaderboard</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="main-content">
+            <div id="error-message" class="alert alert-danger" style="display:none;"></div>
+
+            <div id="profile-block" style="display:none;">
+                <!-- Profile Card Header -->
+                <div class="profile-card mb-4 border rounded p-4">
+                    <div class="d-flex align-items-center gap-4 flex-wrap">
+                        <img src="" id="prof-avatar" class="profile-avatar">
+                        <div>
+                            <h1 class="h3 fw-bold mb-1" id="prof-username">Username</h1>
+                            <p class="text-muted mb-2" id="prof-bio">Bio description</p>
+                            <div class="d-flex gap-3 text-muted small">
+                                <span>Reputation Score: <strong class="text-success fs-5" id="prof-rep">10</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Badges block -->
+                <h2 class="h5 fw-bold mb-3 border-bottom pb-2">Earned Badges</h2>
+                <div class="mb-4" id="prof-badges">
+                    <!-- Badges cards list -->
+                </div>
+
+                <!-- Activity Feed lists -->
+                <h2 class="h5 fw-bold mb-3 border-bottom pb-2">User Activity</h2>
+                <div class="list-group" id="prof-questions">
+                    <!-- User's questions list -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Client Application Scripts -->
+    <script src="js/api.js"></script>
+    <script>
+        const currUser = Api.Auth.getCurrentUser();
+        if (currUser && currUser.username) {
+            document.getElementById('user-nav-name').innerText = currUser.username;
+            document.getElementById('user-nav-avatar').src = `https://api.dicebear.com/7.x/bottts/svg?seed=${currUser.username}`;
+        }
+
+        document.getElementById('menu-btn-profile').addEventListener('click', () => {
+            window.location.href = `profile.html?user=${currUser.username}`;
+        });
+        document.getElementById('menu-btn-logout').addEventListener('click', () => {
+            Api.Auth.logout();
+        });
+        document.getElementById('sidebar-btn-leaderboard').addEventListener('click', () => {
+            window.location.href = 'index.html?leaderboard=true';
+        });
+
+        // Load profile details
+        async function loadProfile() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const userParam = urlParams.get('user') || (currUser ? currUser.username : null);
+
+            if (!userParam) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            try {
+                const profile = await Api.Users.getProfile(userParam);
+                
+                document.getElementById('prof-username').innerText = profile.username;
+                document.getElementById('prof-bio').innerText = profile.bio || 'This scholar has not written a bio yet.';
+                document.getElementById('prof-rep').innerText = profile.reputation;
+                document.getElementById('prof-avatar').src = profile.avatarUrl;
+
+                // Render Badges
+                const badgesDiv = document.getElementById('prof-badges');
+                if (profile.badges && profile.badges.length > 0) {
+                    badgesDiv.innerHTML = profile.badges.map(badge => {
+                        const styleClass = badge.toLowerCase().replace(' ', '-');
+                        return `<span class="badge-pill ${styleClass} p-2 fs-6 m-1">${badge}</span>`;
+                    }).join('');
+                } else {
+                    badgesDiv.innerHTML = '<span class="text-muted small">No badges earned yet. Earn reputation to unlock badges.</span>';
+                }
+
+                // Render asked questions
+                const questionsFeed = await Api.Questions.getAll('', '', '');
+                const userQs = questionsFeed.content.filter(q => q.authorUsername === profile.username);
+
+                const questionsDiv = document.getElementById('prof-questions');
+                questionsDiv.innerHTML = '';
+
+                if (userQs.length > 0) {
+                    userQs.forEach(q => {
+                        const qLink = document.createElement('a');
+                        qLink.href = `question-details.html?id=${q.id}`;
+                        qLink.className = 'list-group-item list-group-item-action d-flex justify-content-between align-items-center';
+                        qLink.innerHTML = `
+                            <div>
+                                <span class="fw-bold">${q.title}</span>
+                                <div class="small text-muted mt-1">Asked on ${new Date(q.createdAt).toLocaleDateString()} • Views: ${q.views}</div>
+                            </div>
+                            <span class="badge bg-secondary rounded-pill">${q.votes} votes</span>
+                        `;
+                        questionsDiv.appendChild(qLink);
+                    });
+                } else {
+                    questionsDiv.innerHTML = '<div class="text-muted p-3">This user has not asked any questions yet.</div>';
+                }
+
+                document.getElementById('profile-block').style.display = 'block';
+
+            } catch (err) {
+                document.getElementById('error-message').innerText = err.message || 'Failed to load profile details.';
+                document.getElementById('error-message').style.display = 'block';
+            }
+        }
+
+        loadProfile();
+    </script>
+</body>
+</html>

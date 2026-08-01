@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  mysql-db:
+    image: mysql:8.0
+    container_name: openqa-mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_DATABASE=openqa_db
+      - MYSQL_ROOT_PASSWORD=root
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pwhash=root"]
+      timeout: 5s
+      retries: 5
+      interval: 10s
+
+  node-app:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: openqa-app
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_HOST=mysql-db
+      - DB_USER=root
+      - DB_PASS=root
+      - DB_NAME=openqa_db
+      - JWT_SECRET=9a4f2c8d3b7a1e5f8g0h2i4j6k8l0m2n4o6p8q0r2s4t6u8v0w2x4y6z8A0B2C4D
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+
+volumes:
+  mysql-data:

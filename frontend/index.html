@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open Question & Answer Platform</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <!-- Custom Style -->
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Header Navigation Bar -->
+    <nav class="navbar navbar-expand-lg top-navbar fixed-top py-0">
+        <div class="container-fluid shell-container">
+            <a class="navbar-brand py-2" href="index.html">
+                <i class="fa-solid fa-layer-group"></i> open<strong>qa</strong>
+            </a>
+            
+            <div class="d-flex flex-grow-1 mx-lg-4 mx-2">
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0 text-muted"><i class="fa-solid fa-search"></i></span>
+                    <input type="text" id="search-box" class="form-control border-start-0 ps-0" placeholder="Search questions by keywords, tag (#math) or author...">
+                </div>
+            </div>
+
+            <div class="d-flex align-items-center gap-3">
+                <div class="position-relative cursor-pointer" id="nav-notifications" style="display:none;">
+                    <i class="fa-solid fa-bell fs-5 text-muted"></i>
+                    <span class="notifications-pill" id="notification-count" style="display:none;">0</span>
+                </div>
+                <div id="auth-buttons">
+                    <a href="login.html" class="btn btn-so-secondary btn-sm me-2">Log in</a>
+                    <a href="register.html" class="btn btn-so-primary btn-sm">Sign up</a>
+                </div>
+                <div id="user-menu" style="display:none;" class="dropdown">
+                    <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle text-dark" id="userDropdown" data-bs-toggle="dropdown">
+                        <img src="" id="user-nav-avatar" class="rounded-circle me-2" width="30" height="30">
+                        <span id="user-nav-name" class="fw-bold me-1">User</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="#" id="menu-btn-profile">My Profile</a></li>
+                        <li><a class="dropdown-item" href="admin.html" id="menu-btn-admin" style="display:none;">Admin panel</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#" id="menu-btn-logout">Log out</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Shell Container -->
+    <div class="shell-container">
+        
+        <!-- Left Sidebar Navigation -->
+        <aside class="left-sidebar">
+            <ul class="sidebar-nav">
+                <li class="active"><a href="index.html"><i class="fa-solid fa-earth-americas me-2"></i> Home</a></li>
+                <li><a href="index.html?sortBy=votes"><i class="fa-solid fa-fire me-2"></i> Hot Topics</a></li>
+                <li><a href="#" id="sidebar-btn-leaderboard"><i class="fa-solid fa-trophy me-2"></i> Leaderboard</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Feed Workspace -->
+        <main class="main-content">
+            <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
+                <h1 class="h3 mb-0" id="feed-title">All Questions</h1>
+                <a href="ask-question.html" class="btn btn-so-primary py-2 px-3" id="btn-ask-prompt">Ask Question</a>
+            </div>
+
+            <!-- Leaderboard panel (Hidden by default, shown when clicking Leaderboard link) -->
+            <div id="leaderboard-section" style="display:none;" class="mb-4">
+                <h2 class="h4 mb-3"><i class="fa-solid fa-trophy text-warning"></i> Contributor Leaderboard</h2>
+                <div class="table-responsive">
+                    <table class="table table-hover border">
+                        <thead class="table-light">
+                            <tr>
+                                <th width="10%">Rank</th>
+                                <th>Contributor</th>
+                                <th>Reputation Score</th>
+                                <th>Badges Earned</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboard-tbody">
+                            <!-- Leaderboard list -->
+                        </tbody>
+                    </table>
+                </div>
+                <hr class="my-4">
+            </div>
+
+            <div id="questions-container">
+                <!-- Dynamic questions list -->
+                <div class="text-center py-5">
+                    <div class="spinner-border text-secondary" role="status"></div>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <nav id="feed-pagination" class="mt-4" style="display:none;">
+                <ul class="pagination justify-content-center">
+                    <!-- Page items -->
+                </ul>
+            </nav>
+        </main>
+
+        <!-- Right Sidebar Info Widgets -->
+        <aside class="right-sidebar">
+            <div class="sidebar-box">
+                <div class="sidebar-box-title">Rules of Social Learning</div>
+                <ul class="sidebar-box-list">
+                    <li><i class="fa-solid fa-plus text-success me-1"></i> Ask a Question (<strong>+5 points</strong>)</li>
+                    <li><i class="fa-solid fa-pen-nib text-success me-1"></i> Write an Answer (<strong>+10 points</strong>)</li>
+                    <li><i class="fa-solid fa-caret-up text-success me-1"></i> Receive an Upvote (<strong>+15 points</strong>)</li>
+                    <li><i class="fa-solid fa-check text-success me-1"></i> Answer Accepted (<strong>+25 points</strong>)</li>
+                    <li><i class="fa-solid fa-caret-down text-danger me-1"></i> Downvote (<strong>-2 points</strong>)</li>
+                </ul>
+            </div>
+            
+            <div class="sidebar-box">
+                <div class="sidebar-box-title">Earned Badges Guide</div>
+                <ul class="sidebar-box-list">
+                    <li><span class="badge-pill math-scholar">Math Scholar</span> Include LaTeX equations.</li>
+                    <li><span class="badge-pill first-word">First Word</span> Answer your first question.</li>
+                    <li><span class="badge-pill popular">Popular</span> A post reaches 5 upvotes.</li>
+                    <li><span class="badge-pill stellar">Stellar Contributor</span> 100+ reputation points.</li>
+                    <li><span class="badge-pill top-scholar">Top Scholar</span> 200+ reputation points.</li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- KaTeX JS Auto-Render -->
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    <!-- Marked Markdown parser -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <!-- Client Application Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

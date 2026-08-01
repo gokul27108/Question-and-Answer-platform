@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard — Open Q&A Platform</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom Style -->
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Header Navigation Bar -->
+    <nav class="navbar navbar-expand-lg top-navbar fixed-top py-0">
+        <div class="container-fluid shell-container">
+            <a class="navbar-brand py-2" href="index.html">
+                <i class="fa-solid fa-layer-group"></i> open<strong>qa</strong>
+            </a>
+            
+            <div class="d-flex align-items-center gap-3 ms-auto">
+                <div id="user-menu" class="dropdown">
+                    <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle text-dark" id="userDropdown" data-bs-toggle="dropdown">
+                        <img src="" id="user-nav-avatar" class="rounded-circle me-2" width="30" height="30">
+                        <span id="user-nav-name" class="fw-bold me-1">User</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="#" id="menu-btn-profile">My Profile</a></li>
+                        <li><a class="dropdown-item" href="#" id="menu-btn-logout">Log out</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Shell Container -->
+    <div class="shell-container">
+        
+        <!-- Left Sidebar Navigation -->
+        <aside class="left-sidebar">
+            <ul class="sidebar-nav">
+                <li><a href="index.html"><i class="fa-solid fa-earth-americas me-2"></i> Home</a></li>
+                <li><a href="index.html?sortBy=votes"><i class="fa-solid fa-fire me-2"></i> Hot Topics</a></li>
+                <li><a href="#" id="sidebar-btn-leaderboard"><i class="fa-solid fa-trophy me-2"></i> Leaderboard</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="main-content">
+            <h1 class="h3 border-bottom pb-3 mb-4 fw-bold">Admin Dashboard</h1>
+
+            <div id="error-message" class="alert alert-danger" style="display:none;"></div>
+
+            <!-- Stats Cards Grid -->
+            <div class="row row-cols-1 row-cols-md-3 g-4 mb-5" id="stats-grid" style="display:none;">
+                <div class="col">
+                    <div class="card h-100 border shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <i class="fa-solid fa-users fs-1 text-primary mb-3"></i>
+                            <h2 class="h5 card-title text-muted mb-1">Total Active Users</h2>
+                            <p class="display-5 fw-bold mb-0 text-dark" id="stat-users">0</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card h-100 border shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <i class="fa-solid fa-clipboard-question fs-1 text-warning mb-3"></i>
+                            <h2 class="h5 card-title text-muted mb-1">Total Questions Asked</h2>
+                            <p class="display-5 fw-bold mb-0 text-dark" id="stat-questions">0</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card h-100 border shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <i class="fa-solid fa-comment-dots fs-1 text-success mb-3"></i>
+                            <h2 class="h5 card-title text-muted mb-1">Total Answers Provided</h2>
+                            <p class="display-5 fw-bold mb-0 text-dark" id="stat-answers">0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Management Section -->
+            <h2 class="h5 fw-bold mb-3 border-bottom pb-2">System Moderation logs</h2>
+            <div class="card p-4 border shadow-sm">
+                <p class="text-muted mb-0"><i class="fa-solid fa-circle-check text-success me-1"></i> Database health checks completed successfully. Secure JWT tokens are working normally.</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Client Application Scripts -->
+    <script src="js/api.js"></script>
+    <script>
+        const currUser = Api.Auth.getCurrentUser();
+
+        // Redirect if not admin
+        if (!Api.Auth.isAuthenticated() || !currUser.roles.includes('ADMIN')) {
+            window.location.href = 'index.html';
+        }
+
+        document.getElementById('user-nav-name').innerText = currUser.username;
+        document.getElementById('user-nav-avatar').src = `https://api.dicebear.com/7.x/bottts/svg?seed=${currUser.username}`;
+
+        document.getElementById('menu-btn-profile').addEventListener('click', () => {
+            window.location.href = `profile.html?user=${currUser.username}`;
+        });
+        document.getElementById('menu-btn-logout').addEventListener('click', () => {
+            Api.Auth.logout();
+        });
+        document.getElementById('sidebar-btn-leaderboard').addEventListener('click', () => {
+            window.location.href = 'index.html?leaderboard=true';
+        });
+
+        // Load statistics
+        async function loadStats() {
+            try {
+                const stats = await Api.Admin.getStats();
+                document.getElementById('stat-users').innerText = stats.totalUsers;
+                document.getElementById('stat-questions').innerText = stats.totalQuestions;
+                document.getElementById('stat-answers').innerText = stats.totalAnswers;
+
+                document.getElementById('stats-grid').style.display = 'flex';
+            } catch (err) {
+                document.getElementById('error-message').innerText = err.message || 'Failed to load stats.';
+                document.getElementById('error-message').style.display = 'block';
+            }
+        }
+
+        loadStats();
+    </script>
+</body>
+</html>

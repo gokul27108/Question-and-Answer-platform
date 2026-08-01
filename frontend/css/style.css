@@ -1,0 +1,403 @@
+/* Stack Overflow Inspired Premium Design Customizations for Q&A Platform */
+
+:root {
+    --so-orange: #f48225;
+    --so-orange-hover: #da6f1b;
+    --so-blue: #0074cc;
+    --so-blue-hover: #00599c;
+    --so-light-blue: #e1ecf4;
+    --so-light-blue-border: #7aa7c7;
+    --so-light-blue-color: #39739d;
+    --border-color: #e3e6e8;
+    --text-dark: #232629;
+    --text-muted: #6a737c;
+    --bg-light: #f8f9f9;
+    --vote-gray: #babfc3;
+    --success-green: #2ef37e;
+    --accepted-green: #3db867;
+    --bg-white: #ffffff;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--text-dark);
+    background-color: var(--bg-white);
+    font-size: 15px;
+    line-height: 1.4;
+    padding-top: 56px; /* Offset for top nav */
+}
+
+/* Global Elements */
+a {
+    color: var(--so-blue);
+    text-decoration: none;
+}
+a:hover {
+    color: var(--so-blue-hover);
+    text-decoration: underline;
+}
+
+.btn-so-primary {
+    background-color: var(--so-blue);
+    color: white;
+    border: 1px solid transparent;
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.4);
+    border-radius: 3px;
+    font-weight: 500;
+}
+.btn-so-primary:hover {
+    background-color: var(--so-blue-hover);
+    color: white;
+}
+
+.btn-so-orange {
+    background-color: var(--so-orange);
+    color: white;
+    border-radius: 3px;
+    font-weight: 500;
+}
+.btn-so-orange:hover {
+    background-color: var(--so-orange-hover);
+    color: white;
+}
+
+.btn-so-secondary {
+    background-color: var(--so-light-blue);
+    color: var(--so-light-blue-color);
+    border: 1px solid var(--so-light-blue-border);
+    border-radius: 3px;
+}
+.btn-so-secondary:hover {
+    background-color: #b3dbf5;
+    color: var(--so-light-blue-color);
+}
+
+/* Layout Shell */
+.top-navbar {
+    border-top: 3px solid var(--so-orange);
+    border-bottom: 1px solid var(--border-color);
+    background-color: var(--bg-light);
+    height: 56px;
+    z-index: 1050;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    color: var(--text-dark) !important;
+}
+
+.navbar-brand i {
+    color: var(--so-orange);
+}
+
+.shell-container {
+    max-width: 1264px;
+    margin: 0 auto;
+    display: flex;
+}
+
+.left-sidebar {
+    width: 164px;
+    flex-shrink: 0;
+    border-right: 1px solid var(--border-color);
+    min-height: calc(100vh - 56px);
+    padding-top: 24px;
+    position: sticky;
+    top: 56px;
+}
+
+.sidebar-nav {
+    list-style: none;
+    padding-left: 0;
+}
+
+.sidebar-nav li a {
+    display: block;
+    padding: 8px 12px 8px 16px;
+    color: #525960;
+    font-size: 13px;
+    text-decoration: none;
+}
+
+.sidebar-nav li.active a {
+    font-weight: bold;
+    color: #0c0d0e;
+    background-color: #f1f2f3;
+    border-right: 3px solid var(--so-orange);
+}
+
+.sidebar-nav li a:hover {
+    color: #0c0d0e;
+    background-color: #f1f2f3;
+}
+
+.main-content {
+    flex-grow: 1;
+    padding: 24px;
+    border-right: 1px solid var(--border-color);
+    min-height: calc(100vh - 56px);
+}
+
+.right-sidebar {
+    width: 300px;
+    flex-shrink: 0;
+    padding: 24px;
+}
+
+/* Questions Feed list */
+.question-item {
+    border-bottom: 1px solid var(--border-color);
+    padding: 16px 0;
+}
+
+.question-stats {
+    text-align: right;
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.question-stat {
+    margin-bottom: 8px;
+    padding: 4px;
+    border-radius: 3px;
+}
+
+.question-stat.answers {
+    border: 1px solid transparent;
+}
+
+.question-stat.has-answers {
+    border-color: #5eba7d;
+    color: #5eba7d;
+}
+
+.question-stat.accepted-answer {
+    background-color: #5eba7d;
+    color: white;
+}
+
+.question-stat.votes.positive {
+    color: var(--text-dark);
+    font-weight: 500;
+}
+
+.question-title-link {
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 1.3;
+    margin-bottom: 4px;
+    display: block;
+}
+
+.question-excerpt {
+    font-size: 13px;
+    color: #3b4045;
+    margin-bottom: 8px;
+}
+
+.tag-badge {
+    background-color: var(--so-light-blue);
+    color: var(--so-light-blue-color);
+    padding: 4px 6px;
+    font-size: 12px;
+    border-radius: 3px;
+    text-decoration: none;
+    margin-right: 4px;
+    display: inline-block;
+}
+
+.tag-badge:hover {
+    background-color: #d0e4f2;
+    color: #2c5877;
+    text-decoration: none;
+}
+
+.question-meta {
+    font-size: 12px;
+    color: var(--text-muted);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 6px;
+}
+
+.meta-author {
+    color: var(--so-blue);
+}
+
+.meta-reputation {
+    font-weight: bold;
+    color: #525960;
+}
+
+/* Question detail votes & comments */
+.vote-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--vote-gray);
+}
+
+.vote-arrow {
+    font-size: 32px;
+    cursor: pointer;
+    color: var(--vote-gray);
+    transition: color 0.15s;
+}
+
+.vote-arrow:hover, .vote-arrow.active {
+    color: var(--so-orange);
+}
+
+.vote-score {
+    font-size: 20px;
+    font-weight: 600;
+    color: #525960;
+    margin: 4px 0;
+}
+
+.accepted-check {
+    font-size: 28px;
+    color: var(--vote-gray);
+    cursor: pointer;
+}
+
+.accepted-check.active {
+    color: var(--accepted-green);
+}
+
+.post-body {
+    font-size: 15px;
+    line-height: 1.5;
+    color: #232629;
+}
+
+.comment-list {
+    border-top: 1px solid var(--border-color);
+    padding-top: 12px;
+    margin-top: 20px;
+}
+
+.comment-item {
+    padding: 6px 0;
+    border-bottom: 1px dashed var(--border-color);
+    font-size: 13px;
+    color: #232629;
+}
+
+.comment-author {
+    color: var(--so-blue);
+    font-weight: 500;
+}
+
+.comment-time {
+    color: var(--text-muted);
+}
+
+.add-comment-btn {
+    color: var(--text-muted);
+    font-size: 13px;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    padding: 4px 0;
+}
+
+.add-comment-btn:hover {
+    color: var(--so-blue);
+}
+
+/* User profile page */
+.profile-card {
+    border: 1px solid var(--so-light-blue-border);
+    border-radius: var(--so-light-blue-border);
+    background-color: var(--bg-light);
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.profile-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 2px solid var(--border-color);
+}
+
+.stat-number {
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.badge-pill {
+    font-size: 11px;
+    font-weight: bold;
+    padding: 3px 8px;
+    border-radius: 12px;
+    margin-right: 4px;
+    display: inline-block;
+}
+
+.badge-pill.math-scholar { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+.badge-pill.popular { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+.badge-pill.first-word { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+.badge-pill.stellar { background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+.badge-pill.top-scholar { background-color: #e2e3e5; color: #383d41; border: 1px solid #d6d8db; }
+
+/* Right widget boxes */
+.sidebar-box {
+    border: 1px solid #f1e5bc;
+    background-color: #fdf7e2;
+    border-radius: 3px;
+    padding: 16px;
+    margin-bottom: 16px;
+}
+
+.sidebar-box-title {
+    font-size: 12px;
+    font-weight: bold;
+    color: #232629;
+    text-transform: uppercase;
+    border-bottom: 1px solid #f1e5bc;
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+}
+
+.sidebar-box-list {
+    list-style: none;
+    padding-left: 0;
+    font-size: 13px;
+}
+
+.sidebar-box-list li {
+    margin-bottom: 10px;
+}
+
+.notifications-pill {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background-color: var(--so-orange);
+    color: white;
+    font-size: 10px;
+    padding: 2px 5px;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+/* Responsive Rules */
+@media (max-width: 980px) {
+    .right-sidebar {
+        display: none;
+    }
+}
+
+@media (max-width: 640px) {
+    .left-sidebar {
+        display: none;
+    }
+    .main-content {
+        padding: 12px;
+    }
+}

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up — Open Q&A Platform</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom Style -->
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body class="bg-light d-flex align-items-center min-vh-100 py-5">
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-5 col-lg-4">
+                
+                <div class="text-center mb-4">
+                    <a href="index.html" class="h2 text-decoration-none text-dark fw-bold">
+                        <i class="fa-solid fa-layer-group text-warning"></i> open<strong>qa</strong>
+                    </a>
+                </div>
+
+                <div class="card border shadow-sm p-4 bg-white">
+                    <h2 class="h5 mb-4 fw-bold">Create your account</h2>
+                    
+                    <div id="error-message" class="alert alert-danger" style="display:none;"></div>
+                    <div id="success-message" class="alert alert-success" style="display:none;"></div>
+
+                    <form id="register-form">
+                        <div class="mb-3">
+                            <label for="username" class="form-label fw-bold">Username</label>
+                            <input type="text" class="form-control" id="username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label fw-bold">Email</label>
+                            <input type="email" class="form-control" id="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label fw-bold">Password</label>
+                            <input type="password" class="form-control" id="password" placeholder="At least 6 characters" required>
+                        </div>
+                        <button type="submit" class="btn btn-so-orange w-100 py-2">Sign up</button>
+                    </form>
+                </div>
+
+                <div class="text-center mt-4 small">
+                    Already have an account? <a href="login.html" class="text-decoration-none">Log in</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Client Application Scripts -->
+    <script src="js/api.js"></script>
+    <script>
+        document.getElementById('register-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('error-message');
+            const successDiv = document.getElementById('success-message');
+
+            try {
+                errorDiv.style.display = 'none';
+                successDiv.style.display = 'none';
+                
+                await Api.Auth.register(username, email, password);
+                successDiv.innerText = 'Registration successful! Redirecting to login...';
+                successDiv.style.display = 'block';
+                
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 2000);
+            } catch (err) {
+                errorDiv.innerText = err.message || 'Registration failed.';
+                errorDiv.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
