@@ -1,5 +1,7 @@
-// Central API Client integrating with Spring Boot REST Endpoints
-const API_BASE_URL = 'http://localhost:8080/api';
+// Central API Client integrating with REST Endpoints
+const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:8080/api'
+    : 'https://question-and-answer-platform-backend.onrender.com/api'; // Replace with your actual Render backend URL after deployment
 
 const Api = {
     async request(endpoint, options = {}) {

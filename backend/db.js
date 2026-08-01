@@ -24,24 +24,37 @@ let User, Category, Tag, Question, Answer, Comment, Vote, Notification;
 
 async function init() {
   try {
-    // 1. Create database if not exists
-    const connection = await mysql.createConnection({ host, port, user, password });
-    await connection.query(`CREATE DATABASE IF NOT EXISTS \`${database}\`;`);
-    await connection.end();
+    // 1. Initialize Sequelize & Create database if not exists
+    if (process.env.DATABASE_URL) {
+      sequelize = new Sequelize(process.env.DATABASE_URL, {
+        dialect: 'mysql',
+        logging: false,
+        pool: {
+          max: 5,
+          min: 0,
+          acquire: 30000,
+          idle: 10000
+        }
+      });
+    } else {
+      const connection = await mysql.createConnection({ host, port, user, password });
+      await connection.query(`CREATE DATABASE IF NOT EXISTS \`${database}\`;`);
+      await connection.end();
 
-    // 2. Connect with Sequelize
-    sequelize = new Sequelize(database, user, password, {
-      host,
-      port,
-      dialect: 'mysql',
-      logging: false,
-      pool: {
-        max: 5,
-        min: 0,
-        acquire: 30000,
-        idle: 10000
-      }
-    });
+      // 2. Connect with Sequelize
+      sequelize = new Sequelize(database, user, password, {
+        host,
+        port,
+        dialect: 'mysql',
+        logging: false,
+        pool: {
+          max: 5,
+          min: 0,
+          acquire: 30000,
+          idle: 10000
+        }
+      });
+    }
 
     // 3. Define Models
     User = createUserModel(sequelize);

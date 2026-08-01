@@ -106,3 +106,34 @@ Log in using either the **username** OR the **email address** of the seeded prof
 | **Gokul** | `gokul@gmail.com` | 120 | `USER`, `ADMIN` | Math Scholar, Stellar Contributor |
 | **EinsteinPi** | `einstein@physics.org` | 340 | `USER` | Math Scholar, Top Scholar, Popular |
 | **AdaCode** | `ada@lovelace.net` | 85 | `USER` | First Word |
+
+---
+
+## 🌐 Cloud Deployment Guide
+
+Follow these steps to host your application live on the web!
+
+### 1. Setup MySQL Database
+1. Create a MySQL database hosted in the cloud (e.g. using a free database tier on **[Aiven.io](https://aiven.io/)**, **[Tidbcloud.com](https://pingcap.com/products/tidb-cloud)**, or **[Render MySQL Docker Private Service](https://render.com/)**).
+2. Copy the database connection URL (e.g. `mysql://user:password@host:port/database`).
+
+### 2. Deploy Backend REST API (on Render)
+1. Sign in to **[Render.com](https://render.com/)** and click **New** > **Web Service**.
+2. Import your GitHub repository.
+3. Configure the service settings:
+   * **Root Directory**: `backend`
+   * **Build Command**: `npm install`
+   * **Start Command**: `npm start`
+4. Expand **Advanced** and add these **Environment Variables**:
+   * `DATABASE_URL` = *[Your MySQL connection URL]*
+   * `JWT_SECRET` = *[A long, secure secret string]*
+5. Click **Deploy**. Copy your live backend URL (e.g., `https://your-backend.onrender.com`).
+
+### 3. Deploy Frontend Client (on Vercel)
+1. Sign in to **[Vercel.com](https://vercel.com/)** and click **Add New** > **Project**.
+2. Import your GitHub repository.
+3. Set the project root directory configuration:
+   * **Root Directory**: `frontend`
+   * **Framework Preset**: `Vite` (Vercel automatically configures `npm run build` and output directory `dist`).
+4. Click **Deploy**.
+5. Replace the placeholder Render URL in **[frontend/js/api.js](file:///d:/open-qa-platform/frontend/js/api.js)** (line 3) with your actual live backend URL so that your live client interfaces with your live API server.
