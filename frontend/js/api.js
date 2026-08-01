@@ -225,3 +225,5 @@ const Api = {
         }
     }
 };
+
+window.Api = Api;
