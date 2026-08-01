@@ -61,10 +61,10 @@ open-qa-platform/
 
 ### 1. Database Setup
 Make sure MySQL server is running locally on your computer.
-By default, the database is configured with the following credentials (defined in `backend/db.js` and `backend/.env` if created):
+By default, the database is configured with the following credentials (configure your local password in `backend/.env`):
 * **Host**: `localhost`
 * **Username**: `root`
-* **Password**: `gokul@@27`
+* **Password**: `YOUR_MYSQL_PASSWORD`
 * **Database**: `openqa_db`
 
 > [!NOTE]
