@@ -1,7 +1,7 @@
 // Central API Client integrating with REST Endpoints
 const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? 'http://localhost:8080/api'
-    : 'https://question-and-answer-platform-backend.onrender.com/api'; // Replace with your actual Render backend URL after deployment
+    : 'https://question-and-answer-platform1.onrender.com/api';
 
 const Api = {
     async request(endpoint, options = {}) {
